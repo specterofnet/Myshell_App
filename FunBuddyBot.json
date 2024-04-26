@@ -1,0 +1,576 @@
+{
+    "type": "automata",
+    "id": "FunBuddyBot",
+    "initial": "select_language_page",
+    "inputs": {},
+    "outputs": {},
+    "context": {
+        "is_english": "",
+        "memory_chat": "{{[]}}",
+        "memory_joke":"",
+        "memory_story":""
+    },
+    "transitions": {},
+    "states": {
+        "select_language_page": {
+            "render": {
+                "text": "Please select the language!/请选择系统语言",
+                "buttons": [
+                    {
+                        "content": "English",
+                        "description": "English",
+                        "on_click": "go_home_english"
+                    },
+                    {
+                        "content": "中文",
+                        "description": "中文",
+                        "on_click": "go_home_chinese"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home_english": "home_page_english_state",
+                "go_home_chinese": "home_page_chinese_state"
+            }
+        },
+        "home_page_english_state": {
+            "outputs": {
+                "context.is_english": "{{true}}"
+            },
+            "render": {
+                "text": "A beautiful day starts here, please choose the game to start",
+                "buttons": [
+                    {
+                        "content": "Chat",
+                        "description": "Click to Start Chatting.",
+                        "on_click": "start_chat"
+                    },
+                    {
+                        "content": "Listening to Jokes",
+                        "description": "Listening to Jokes",
+                        "on_click": "start_listening_to_jokes"
+                    },
+                    {
+                        "content": "Listening to Story",
+                        "description": "Listening to Story",
+                        "on_click": "start_listening_to_story"
+                    },
+                    {
+                        "content": "Composing music",
+                        "description": "Composing music",
+                        "on_click": "composing_music"
+                    },
+                    {
+                        "content": "Watch Video",
+                        "description": "Watch Video",
+                        "on_click": "watch_video"
+                    }
+                ]
+            },
+            "transitions": {
+                "start_chat": "start_chat_state",
+                "start_listening_to_jokes": "start_listening_to_jokes_state",
+                "start_listening_to_story": "start_listening_to_story_state",
+                "composing_music": "start_composing_music_state",
+                "watch_video": "start_watch_video_state"
+            }
+        },
+        "home_page_chinese_state": {
+            "outputs": {
+                "context.is_english": "{{false}}"
+            },
+            "render": {
+                "text": "美好的一天从这里开始，请选择游戏开始",
+                "buttons": [
+                    {
+                        "content": "聊天",
+                        "description": "点击开始你的谈心吧.",
+                        "on_click": "start_chat"
+                    },
+                    {
+                        "content": "听笑话",
+                        "description": "点击开始听笑话吧",
+                        "on_click": "start_listening_to_jokes"
+                    },
+                    {
+                        "content": "听故事",
+                        "description": "点击开始听故事吧",
+                        "on_click": "start_listening_to_story"
+                    },
+                    {
+                        "content": "谱曲",
+                        "description": "快乐书写你的歌曲",
+                        "on_click": "composing_music"
+                    },
+                    {
+                        "content": "看视频",
+                        "description": "点击开始看视频吧",
+                        "on_click": "watch_video"
+                    }
+                ]
+            },
+            "transitions": {
+                "start_chat": "start_chat_state",
+                "start_listening_to_jokes": "start_listening_to_jokes_state",
+                "start_listening_to_story": "start_listening_to_story_state",
+                "composing_music": "start_composing_music_state",
+                "watch_video": "start_watch_video_state"
+            }
+        },
+        "start_chat_state": {
+            "render": {
+                "text": "Hi Click 'Start' to chat / 嗨， 请点击'Start'开始聊天吧",
+                "buttons": [
+                    {
+                        "content": "Start",
+                        "description": "Click to Chat.",
+                        "on_click": "start_chat_task"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home.",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "start_chat_task": "chat_page_state"
+            }
+        },
+        "chat_page_state": {
+            "inputs": {
+                "user_message": {
+                    "type": "IM",
+                    "user_input": true
+                }
+            },
+            "tasks": [
+                {
+                    "name": "generate_reply",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "widget_id": "1744214166769504256",
+                        "system_prompt": "You are a psychological counselor. I want to talk to you about my heart. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "user_prompt": "{{user_message}}",
+                        "memory": "{{context.memory_chat}}",
+                        "output_name": "reply"
+                    }
+                },
+                {
+                    "name": "generate_voice",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "content": "{{reply}}",
+                        "widget_id": "1743159010695057408",
+                        "output_name": "reply_voice"
+                    }
+                }
+            ],
+            "outputs": {
+                "context.memory_chat": "{{[...context.memory_chat, {'user': user_message}, {'assistant': reply}]}}"
+            },
+            "render": {
+                "text": "{{reply}}",
+                "audio": "{{reply_voice}}",
+                "buttons": [
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home/点击返回主页面",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "CHAT": "chat_page_state"
+            }
+        },
+        "start_listening_to_jokes_state": {
+            "render": {
+                "text": "Hi Click 'Start' to listening to jokes / 嗨， 请点击'Start'听笑话吧吧?",
+                "buttons": [
+                    {
+                        "content": "Start",
+                        "description": "Click to Chat.",
+                        "on_click": "start_listen_jokes_task"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home.",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "start_listen_jokes_task": "listening_to_jokes_state"
+            }
+        },
+        "listening_to_jokes_state": {
+            "inputs": {
+                "jokes_type": {
+                  "type": "text",
+                  "user_input": true,
+                  "description": "Please enter the type of joke you want to hear/请输入你想听的笑话的类型",
+                  "default_value": "cold joke / 冷笑话"
+                }
+              },
+              "tasks": [
+                {
+                    "name": "generate_reply",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "widget_id": "1744214024104448000",
+                        "system_prompt": "Tell me some jokes, the types of jokes: {{jokes_type}}. Please check the memory, don't go back to what was previously discussed. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "memory": "{{context.memory_joke}}",
+                        "output_name": "reply"
+                    }
+                },
+                {
+                    "name": "generate_voice",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "content": "{{reply}}",
+                        "widget_id": "1743159010695057408",
+                        "output_name": "reply_voice"
+                    }
+                }
+            ],
+            "outputs": {
+                "context.memory_joke": "{{[...context.memory_joke, {'user': jokes_type}, {'assistant': reply}]}}"
+            },
+            "render": {
+                "text": "{{reply}}",
+                "audio": "{{reply_voice}}",
+                "buttons": [
+                    {
+                        "content": "Get Other",
+                        "description": "Click to get Other/点击获取更多",
+                        "on_click": "get_more_jokes"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home/点击返回主页面",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "get_more_jokes": "listening_to_jokes_state"
+            }
+        },
+        "start_listening_to_story_state": {
+            "render": {
+                "text": "Hi Click 'Start' to listening to story / 嗨， 请点击'Start'听故事吧?",
+                "buttons": [
+                    {
+                        "content": "Start",
+                        "description": "Click to Chat.",
+                        "on_click": "start_listen_story_task"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home.",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "start_listen_story_task": "listening_to_story_state"
+            }
+        },
+        "listening_to_story_state": {
+            "inputs": {
+                "story_type": {
+                  "type": "text",
+                  "user_input": true,
+                  "description": "Please enter the type of story you want to hear/请输入你想听的故事的类型",
+                  "default_value": "love / 爱情"
+                }
+              },
+              "tasks": [
+                {
+                    "name": "generate_reply",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "widget_id": "1744214024104448000",
+                        "system_prompt": "Tell me a story, the types of story: {{story_type}}, Word count less than 1000. Please check the memory, don't go back to what was previously discussed. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "memory": "{{context.memory_story}}",
+                        "output_name": "reply"
+                    }
+                },
+                {
+                    "name": "generate_voice",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "content": "{{reply}}",
+                        "widget_id": "1743159010695057408",
+                        "output_name": "reply_voice"
+                    }
+                }
+            ],
+            "outputs": {
+                "context.memory_story": "{{[...context.memory_story, {'user': story_type}, {'assistant': reply}]}}"
+            },
+            "render": {
+                "text": "{{reply}}",
+                "audio": "{{reply_voice}}",
+                "buttons": [
+                    {
+                        "content": "Get Other",
+                        "description": "Click to get Other/点击获取更多",
+                        "on_click": "get_more_story"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home/点击返回主页面",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "get_more_story": "listening_to_story_state"
+            }
+        },
+        "start_composing_music_state": {
+            "render": {
+                "text": "Hi Click 'Start' to composing music / 嗨， 请点击'Start'开始生成你的音乐吧?",
+                "buttons": [
+                    {
+                        "content": "Start",
+                        "description": "Click to composing music.",
+                        "on_click": "start_composing_music_task"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home.",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "start_composing_music_task": "composing_music_state"
+            }
+        },
+        "composing_music_state": {
+            "inputs": {
+                "prompt": {
+                  "type": "text",
+                  "description":"lyric/歌词",
+                  "user_input": true
+                },
+                "title": {
+                    "type": "text",
+                    "description":"Title/标题",
+                    "user_input": true
+                },
+                "music_style": {
+                    "type": "text",
+                    "description":"Music Style/音乐风格",
+                    "user_input": true,
+                    "default_value":"romantic,slow rock"
+                },
+              },
+              "tasks": [
+                {
+                  "name": "any_module_example_task",
+                  "module_type": "AnyWidgetModule",
+                  "module_config": {
+                    "widget_id": "1782688568476921856",            
+                    "prompt":"{{prompt}}", // this field will received value from user input
+                    "mv":"chirp-v3-0", // 模型版本，默认为chirp-v3-0
+                    "title":"{{title}}", // 歌曲标题
+                    "tags":"{{music_style}}", // 音乐风格
+                    "continue_at":0, // 从先前的歌曲中继续生成新的片段，格式为数字
+                    "continue_clip_id":"", // 
+                    "output_name": "result"
+                  }
+                },
+                {
+                    "name": "generate_reply",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "widget_id": "1744214024104448000",
+                        "system_prompt": "{{result}}, Help me extract the audio playback link inside",
+                        "output_name": "reply"
+                    }
+                }
+              ],
+              "render": {
+                "text": "{{result, \n\n reply}}", // this widget will output a map, you can first run it and know what its type is.
+                "buttons": [
+                  {
+                    "content":"Generate Again",
+                    "description":"",
+                    "on_click":"get_more_music"
+                  },
+                  {
+                      "content": "Home",
+                      "description": "Click to Go Back to Home.",
+                      "on_click": "go_home"
+                  }
+                ]
+              },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "get_more_music": "composing_music_state"
+            }
+        },
+        "start_watch_video_state": {
+            "render": {
+                "text": "Hi Click 'Start' to search video / 嗨， 请点击'Start'开始搜索你想看的视频吧?",
+                "buttons": [
+                    {
+                        "content": "Start",
+                        "description": "Click to search video.",
+                        "on_click": "start_video_search_task"
+                    },
+                    {
+                        "content": "Home",
+                        "description": "Click to Go Back to Home.",
+                        "on_click": "go_home"
+                    }
+                ]
+            },
+            "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "start_video_search_task": "watch_video_state"
+            }
+        },
+        "watch_video_state": {
+            "inputs": {
+                "query": {
+                  "type": "text",
+                  "description":"Please enter your search content. / 请输入你的搜索内容",
+                  "user_input": true
+                }
+              },
+              "tasks": [
+                {
+                  "name": "any_module_example_task",
+                  "module_type": "AnyWidgetModule",
+                  "module_config": {
+                    "widget_id": "1781994395360530432",            
+                    "query":"{{query}}", // this field will received value from user input
+                    "num_results":10, // 要返回的搜索结果数量。
+                    "output_name": "result"
+                  }
+                },
+                {
+                    "name": "generate_reply",
+                    "module_type": "AnyWidgetModule",
+                    "module_config": {
+                        "widget_id": "1744214024104448000",
+                        "system_prompt": "{{result}}, Help me extract the description and link from this map, and output them one by one",
+                        "output_name": "reply"
+                    }
+                }
+              ],
+              "render": {
+                //"text": "{{JSON.stringify(result)}}", // this widget will output a map, you can first run it and know what its type is.
+                "text": "{{reply}}",
+                "buttons": [
+                  {
+                    "content":"Generate Again",
+                    "description":"",
+                    "on_click":"generate"
+                  },
+                  {
+                    "content": "Home",
+                    "description": "Click to Go Back to Home.",
+                    "on_click": "go_home"
+                    }
+                ]
+              },
+              "transitions": {
+                "go_home": [
+                    {
+                        "target": "home_page_english_state",
+                        "condition": "{{context.is_english}}"
+                    },
+                    {
+                        "target": "home_page_chinese_state"
+                    }
+                ],
+                "generate": "watch_video_state"
+              }
+        }
+    }
+}
