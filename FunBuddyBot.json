@@ -5,8 +5,8 @@
     "inputs": {},
     "outputs": {},
     "context": {
-        "is_english": "",
-        "memory_chat": "{{[]}}",
+        "is_english":"",
+        "memory_chat":"",
         "memory_joke":"",
         "memory_story":""
     },
@@ -123,12 +123,12 @@
                 "buttons": [
                     {
                         "content": "Start",
-                        "description": "Click to Chat.",
+                        "description": "Click to Start / 点击开始",
                         "on_click": "start_chat_task"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home.",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -159,7 +159,7 @@
                     "module_type": "AnyWidgetModule",
                     "module_config": {
                         "widget_id": "1744214166769504256",
-                        "system_prompt": "You are a psychological counselor. I want to talk to you about my heart. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "system_prompt": "You are a psychological counselor. I want to talk to you about my heart. Don't repeat your answer. If {{context.is_english}} == false, please talk to me in Chinese. ",
                         "user_prompt": "{{user_message}}",
                         "memory": "{{context.memory_chat}}",
                         "output_name": "reply"
@@ -184,7 +184,7 @@
                 "buttons": [
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home/点击返回主页面",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -204,16 +204,16 @@
         },
         "start_listening_to_jokes_state": {
             "render": {
-                "text": "Hi Click 'Start' to listening to jokes / 嗨， 请点击'Start'听笑话吧吧?",
+                "text": "Hi Click 'Start' to listening to jokes / 嗨， 请点击'Start'开始听笑话吧?",
                 "buttons": [
                     {
                         "content": "Start",
-                        "description": "Click to Chat.",
+                        "description": "Click to Start / 点击开始",
                         "on_click": "start_listen_jokes_task"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home.",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -246,7 +246,8 @@
                     "module_type": "AnyWidgetModule",
                     "module_config": {
                         "widget_id": "1744214024104448000",
-                        "system_prompt": "Tell me some jokes, the types of jokes: {{jokes_type}}. Please check the memory, don't go back to what was previously discussed. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "system_prompt": "You are an AI who can tell many jokes, including various types, such as professional jokes, children's jokes, lawyer jokes, political jokes, patient jokes, quiz jokes, adult jokes, vulgar jokes, cold jokes, Internet jokes, campus jokes , embarrassing jokes, parody jokes, etc. If I ask you to tell the same type of joke multiple times, please don't output the same joke. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "user_prompt": "Tell me a joke, the types of joke is {{jokes_type}}",
                         "memory": "{{context.memory_joke}}",
                         "output_name": "reply"
                     }
@@ -269,8 +270,8 @@
                 "audio": "{{reply_voice}}",
                 "buttons": [
                     {
-                        "content": "Get Other",
-                        "description": "Click to get Other/点击获取更多",
+                        "content":"Generate Again",
+                        "description":"Click to Get More / 点击获取更多",
                         "on_click": "get_more_jokes"
                     },
                     {
@@ -295,16 +296,16 @@
         },
         "start_listening_to_story_state": {
             "render": {
-                "text": "Hi Click 'Start' to listening to story / 嗨， 请点击'Start'听故事吧?",
+                "text": "Hi Click 'Start' to listening to story / 嗨， 请点击'Start'开始听故事吧?",
                 "buttons": [
                     {
                         "content": "Start",
-                        "description": "Click to Chat.",
+                        "description": "Click to Start / 点击开始",
                         "on_click": "start_listen_story_task"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home.",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -327,7 +328,7 @@
                 "story_type": {
                   "type": "text",
                   "user_input": true,
-                  "description": "Please enter the type of story you want to hear/请输入你想听的故事的类型",
+                  "description": "Please enter the type of story you want to hear / 请输入你想听的故事的类型",
                   "default_value": "love / 爱情"
                 }
               },
@@ -337,7 +338,8 @@
                     "module_type": "AnyWidgetModule",
                     "module_config": {
                         "widget_id": "1744214024104448000",
-                        "system_prompt": "Tell me a story, the types of story: {{story_type}}, Word count less than 1000. Please check the memory, don't go back to what was previously discussed. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "system_prompt": "You are an AI who can tell many stories, including various types, such as fairy tales, fables, idiom stories, mythological stories, real events, science fiction stories, detective stories, time travel stories, drama stories, legendary stories, life stories, and history. Stories, inspirational stories, spiritual stories, growth stories, horror stories, etc. If {{context.is_english}} == false, please talk to me in Chinese. ",
+                        "user_prompt": "Tell me a story, the types of story is {{story_type}}. Word count less than 1000. Please check your memory and don't tell repeated story.",
                         "memory": "{{context.memory_story}}",
                         "output_name": "reply"
                     }
@@ -360,13 +362,13 @@
                 "audio": "{{reply_voice}}",
                 "buttons": [
                     {
-                        "content": "Get Other",
-                        "description": "Click to get Other/点击获取更多",
+                        "content":"Generate Again",
+                        "description":"Click to Get More / 点击获取更多",
                         "on_click": "get_more_story"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home/点击返回主页面",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -390,12 +392,12 @@
                 "buttons": [
                     {
                         "content": "Start",
-                        "description": "Click to composing music.",
+                        "description": "Click to Start / 点击开始",
                         "on_click": "start_composing_music_task"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home.",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -417,17 +419,17 @@
             "inputs": {
                 "prompt": {
                   "type": "text",
-                  "description":"lyric/歌词",
+                  "description":"lyric / 歌词",
                   "user_input": true
                 },
                 "title": {
                     "type": "text",
-                    "description":"Title/标题",
+                    "description":"Title / 标题",
                     "user_input": true
                 },
                 "music_style": {
                     "type": "text",
-                    "description":"Music Style/音乐风格",
+                    "description":"Music Style / 音乐风格",
                     "user_input": true,
                     "default_value":"romantic,slow rock"
                 },
@@ -452,22 +454,22 @@
                     "module_type": "AnyWidgetModule",
                     "module_config": {
                         "widget_id": "1744214024104448000",
-                        "system_prompt": "{{result}}, Help me extract the audio playback link inside",
+                        "system_prompt": "{{result}}, Help me extract the MP3 and MP4 audio playback links from this map and output them sequentially",
                         "output_name": "reply"
                     }
                 }
               ],
               "render": {
-                "text": "{{result, \n\n reply}}", // this widget will output a map, you can first run it and know what its type is.
+                "text": "{{reply}}", // this widget will output a map, you can first run it and know what its type is.
                 "buttons": [
                   {
                     "content":"Generate Again",
-                    "description":"",
+                    "description":"Click to Get More / 点击获取更多",
                     "on_click":"get_more_music"
                   },
                   {
                       "content": "Home",
-                      "description": "Click to Go Back to Home.",
+                      "description": "Click to Go Back to Home / 点击回到主页面",
                       "on_click": "go_home"
                   }
                 ]
@@ -491,12 +493,12 @@
                 "buttons": [
                     {
                         "content": "Start",
-                        "description": "Click to search video.",
+                        "description": "Click to Start / 点击开始",
                         "on_click": "start_video_search_task"
                     },
                     {
                         "content": "Home",
-                        "description": "Click to Go Back to Home.",
+                        "description": "Click to Go Back to Home / 点击回到主页面",
                         "on_click": "go_home"
                     }
                 ]
@@ -518,7 +520,7 @@
             "inputs": {
                 "query": {
                   "type": "text",
-                  "description":"Please enter your search content. / 请输入你的搜索内容",
+                  "description":"Please enter your search content / 请输入你的搜索内容",
                   "user_input": true
                 }
               },
@@ -544,17 +546,16 @@
                 }
               ],
               "render": {
-                //"text": "{{JSON.stringify(result)}}", // this widget will output a map, you can first run it and know what its type is.
                 "text": "{{reply}}",
                 "buttons": [
                   {
                     "content":"Generate Again",
-                    "description":"",
+                    "description":"Click to Get More / 点击获取更多",
                     "on_click":"generate"
                   },
                   {
                     "content": "Home",
-                    "description": "Click to Go Back to Home.",
+                    "description": "Click to Go Back to Home / 点击回到主页面",
                     "on_click": "go_home"
                     }
                 ]
